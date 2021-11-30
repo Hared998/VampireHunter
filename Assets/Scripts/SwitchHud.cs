@@ -10,12 +10,12 @@ public class SwitchHud : MonoBehaviour
     // Start is called before the first frame update
     public void sw()
     {
-        Debug.Log("obie to");
         hud1.enabled = false;
         hud2.enabled = true;
     }
     public void Start()
     {
+   
         hud2.enabled = false;
     }
 }

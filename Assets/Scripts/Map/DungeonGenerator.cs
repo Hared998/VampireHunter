@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class DungeonGenerator : MonoBehaviour
 {
+
+    public GameObject ParentCol;
     // Start is called before the first frame update
     public DungeonRoom RG;
     public Chunk chunk;
@@ -33,7 +35,7 @@ public class DungeonGenerator : MonoBehaviour
 
     void Start()
     {
-
+        cam.GetComponent<CameManager>().enabled = false;
 
     }
     public void SetPosition(float x, float y, float size)
@@ -403,8 +405,9 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < DungeonMap.Chunks.Count; i++)
         {
             DungeonMap.Chunks[i] = RG.GenerateRoom(DungeonMap.Chunks[i], start,biome);
-            Debug.Log("ID");
+            Debug.Log("eldo");
             ListChunk.Add(DungeonMap.Chunks[i]);
+            Debug.Log("eld2o");
         }
         
         
@@ -412,6 +415,7 @@ public class DungeonGenerator : MonoBehaviour
         DungeonMap.Connections = DungeonMap.Prim(DungeonMap.Chunks[start], DungeonMap.Chunks);
         int max = 0;
         int id = 0;
+        Debug.Log("eld3o");
         foreach (var i in DungeonMap.Connections)
         {
             i.Parentb.cost = i.Parenta.cost + 1;
@@ -422,6 +426,7 @@ public class DungeonGenerator : MonoBehaviour
             }
             
         }
+        Debug.Log("eldo4");
         foreach (var i in DungeonMap.Connections)
         {
             if (i.Parentb.ID == id)
@@ -734,8 +739,8 @@ public class DungeonGenerator : MonoBehaviour
             }
 
         }
-        gameObject.GetComponent<ProgressMission>().maxEnemy = GameObject.FindGameObjectsWithTag("Enemy").Length;
-  
+        gameObject.GetComponent<ProgressMission>().SetEnemys();
+      
         gameObject.GetComponent<SpawnPlayer>().SetPlayer(ListChunk[start], DungeonMap.GetCenterOfChunk(ListChunk[start], biome.Ground,biome.Road, botMap,biome));
         gameObject.GetComponent<SwitchHud>().sw();
     }
@@ -757,6 +762,7 @@ public class DungeonGenerator : MonoBehaviour
                         float random = Random.Range(0.0f, 1.0f);
                         if (random >= 0.5)
                         {
+                            Collider2D tmpcol = Instantiate(collider, new Vector3(t.x + 0.5f, t.y + 0.5f, t.z), Quaternion.identity);
                             decorateMap.SetTile(t, i.Type.MainDecorate);
                             Coords tmp = DungeonMap.GetCenterOfChunk(i, biome.Ground, botMap, biome);
                             Coords tmp2 = PaintChest(biome, i, decorateMap, botMap);
@@ -798,7 +804,9 @@ public class DungeonGenerator : MonoBehaviour
 
                         if (biome.Ground == botMap.GetTile(normal))
                         {
+                            Collider2D tmpcol = Instantiate(collider, new Vector3(normal.x + 0.5f, normal.y + 0.5f, normal.z), Quaternion.identity);
                             decorateMap.SetTile(normal, i.Type.MainDecorate);
+
                             Coords tmp = DungeonMap.GetCenterOfChunk(i, biome.Ground, botMap, biome);
                             Coords tmp2 =PaintChest(biome, i, decorateMap, botMap);
                             if (tmp2 != null)
@@ -916,7 +924,10 @@ public class DungeonGenerator : MonoBehaviour
                 Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
                 if (botMap.GetTile(PaintPixel) == null)
                 {
-                    Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                    //Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+//                    tmpcol.transform.parent = ParentCol.transform;
+
+
                     botMap.SetTile(PaintPixel, biomes.Void);
      
                 }
@@ -956,7 +967,8 @@ public class DungeonGenerator : MonoBehaviour
 
                             if (j.IsNearTextureWith(botMap, biome.Ground) > 0 || (j.IsNearTextureWith(botMap, biome.Road) > 0))
                             {
-                                Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                                Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                                tmpcol.transform.parent = ParentCol.transform; 
                                 botMap.SetTile(PaintPixel, biome.Wall);
                                 j.id_chunk = i.ID;
                                 ListWall.Add(j);
@@ -968,7 +980,8 @@ public class DungeonGenerator : MonoBehaviour
                         {
                             botMap.SetTile(PaintPixel, null);
                             botMap.SetTile(PaintPixel, biome.Wall);
-                            Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                            Collider2D tmpcol =Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                            tmpcol.transform.parent = ParentCol.transform;
                             j.id_chunk = i.ID;
                             ListWall.Add(j);
                         }
@@ -977,7 +990,9 @@ public class DungeonGenerator : MonoBehaviour
                             botMap.SetTile(PaintPixel, null);
                             botMap.SetTile(PaintPixel, biome.Wall);
                             j.id_chunk = i.ID;
-                            Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                            Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                            tmpcol.transform.parent = ParentCol.transform;
+
                             ListWall.Add(j);
                         }
 
@@ -1087,6 +1102,7 @@ public class DungeonGenerator : MonoBehaviour
         }
 
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))

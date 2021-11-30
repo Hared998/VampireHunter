@@ -11,6 +11,7 @@ public class SpawnPlayer : MonoBehaviour
     public Vector3 offset;
     public Tilemap map;
     public Slider hp;
+    public ParticleSystem DashParticle;
 
     public PlayerStats ps;
     public Camera cam;
@@ -18,6 +19,7 @@ public class SpawnPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+       
        
     }
     public void SetPlayer(Chunk chunk, Coords spawncoords)
@@ -38,9 +40,13 @@ public class SpawnPlayer : MonoBehaviour
 
         Vector3 SpawnPoint = new Vector3(najx, najy, 0);
         GameObject CopyPlayer = Instantiate(Player, SpawnPoint + offset, Quaternion.identity);
+        ParticleSystem DParticle = Instantiate(DashParticle, Vector3.zero, Quaternion.identity);
         CopyPlayer.GetComponent<PlayerStats>().HealthBar = hp;
+        CopyPlayer.GetComponent<Walk>().dashParticle = DParticle;
         cam.GetComponent<CameManager>().player = CopyPlayer.transform;
         CopyPlayer.GetComponent<Walk>().cam = cam;
+        cam.GetComponent<CameManager>().enabled = true;
+
     }        
     
 

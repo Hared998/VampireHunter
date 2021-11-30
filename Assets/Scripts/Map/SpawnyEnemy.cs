@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class SpawnyEnemy : MonoBehaviour
 {
     public GameObject Enemy;
-
+    public GameObject Parent;
     public Tilemap map;
     public ParticleSystem blood;
     public GameObject EnemyObject;
@@ -28,6 +28,7 @@ public class SpawnyEnemy : MonoBehaviour
                 chunk.ListCoords[k].IsSpawned = true;
                 GameObject CopyEnemy = Instantiate(Enemy, tmp + offset, Quaternion.Euler(0, 0, Random.Range(1, 360)));
                 CopyEnemy.GetComponent<EnemyController>().blood = blood;
+                CopyEnemy.transform.parent = Parent.transform;
 
             }
             else

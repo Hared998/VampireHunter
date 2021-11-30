@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class ProgressMission : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int maxEnemy;
+    public static int CounterMaxEnemy;
     public Slider slider;
     public float killed;
     
@@ -16,9 +16,13 @@ public class ProgressMission : MonoBehaviour
     }
     public void Killed()
     {
-       killed = maxEnemy - GameObject.FindGameObjectsWithTag("Enemy").Length;
+       killed = CounterMaxEnemy - GameObject.FindGameObjectsWithTag("Enemy").Length;
     }
-
+    public void SetEnemys()
+    {
+        CounterMaxEnemy = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        slider.value = PercentCount(CounterMaxEnemy, killed);
+    }
 
     // Update is called once per frame
     void Update()
@@ -27,12 +31,12 @@ public class ProgressMission : MonoBehaviour
         Killed();
         if (killed > 0)
         {
-            slider.value = PercentCount(maxEnemy, killed);
+            slider.value = PercentCount(CounterMaxEnemy, killed);
 
 
             if (slider.value == 100)
             {
-              //  SceneManager.LoadScene(1);
+                //  SceneManager.LoadScene(1);
             }
         }
 

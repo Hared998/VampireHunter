@@ -11,28 +11,26 @@ public class ARrow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     IEnumerator Cleaner()
     {
         yield return new WaitForSeconds(5f);
         Destroy(gameObject);
-        
+
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
-
-        { 
-            
-
+        {
+     
             Vector3 direction = collision.transform.position - Arrow.transform.position;
             direction.y = 0;
             collision.GetComponent<EnemyController>().TakeDamage(damage);
@@ -40,15 +38,24 @@ public class ARrow : MonoBehaviour
             collision.GetComponent<EnemyController>().EF.GetHit = true;
             collision.GetComponent<Rigidbody2D>().AddForce(direction.normalized * 50f);
             
-
-
-
-
+            Arrow.GetComponent<BoxCollider2D>().enabled = false;
         }
-        if (collision.tag != "Untagged") 
+        else
         {
-            Arrow.velocity = transform.up * 0;
-            StartCoroutine(Cleaner());
+    
+                Arrow.velocity = transform.up * 0;
+                StartCoroutine(Cleaner());
+       
         }
+
+    }
+    void OnCollisionEnter2D(Collision2D col)
+    {
+
+        Arrow.velocity = transform.up * 0;
+        StartCoroutine(Cleaner());
     }
 }
+ 
+
+

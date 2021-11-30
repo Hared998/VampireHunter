@@ -56,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -44025399
-  m_SortingLayer: 3
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: 4adeaf2d2b1c7417e89f026626d8264f,
     type: 3}
@@ -101,8 +101,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fa312169b149844fa3a8a2d38740a03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 0}
   Player: {fileID: 8269365891457252427}
   SpeedPlayer: 0
+  dashCooldown: 0
+  dashDistance: 0
+  isDash: 0
+  DashDetector: {fileID: 0}
+  dashParticle: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
   cam: {fileID: 8746927309054453108}
   blood: {fileID: 0}
@@ -156,6 +162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d826eddbe819c5848b56a26ad36b6538, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Cooldown: 0
+  NextAttack: 0
+  reload: 0
   Arrow: {fileID: 4764766789044784622, guid: 36353d19b81bbf141b0393147b1eda97, type: 3}
   SpawnObject: {fileID: 3596107894924700205}
 --- !u!1 &4966724472400027503
@@ -238,7 +247,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
