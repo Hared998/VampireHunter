@@ -499,7 +499,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -533,7 +533,7 @@ MonoBehaviour:
   TimeAttack: 0.5
   NextTimeAttack: 0
   Cooldown: 0.3
-  speed: 4.5
+  speed: 3
   Health: 100
   Armor: 0
   EF: {fileID: 5082566287935421808}

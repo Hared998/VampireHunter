@@ -26,8 +26,10 @@ public class EnemyHear : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
 
+
             if (collision.GetComponent<Walk>().IsWalking && !Enemy.GetComponent<EnemyController>().isAttack)
             {
+
                 Vector3 direction = collision.transform.position - Enemy.transform.position;
 
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;

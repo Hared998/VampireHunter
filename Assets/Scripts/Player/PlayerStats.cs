@@ -8,16 +8,22 @@ public class PlayerStats : MonoBehaviour
 {
     public float Health = 100;
     public float Armor = 10;
-    public int Level = 1;
+
     public int BaseDamage = 5;
     public int Power = 50;
 
-    
+    public int SkillPoints = 0;
+    public int baseexpNeeded = 100;
+    public int expNeeded;
+    public int Level = 1;
+    public int expierience = 0;
+
+    public SkillTree sk;
 
     public Slider HealthBar;
     void Start()
     {
-        
+        expNeeded = baseexpNeeded;
     }
     public void TakeDamage(float Damage)
     {
@@ -34,14 +40,21 @@ public class PlayerStats : MonoBehaviour
     void Update()
     {
         HealthBar.value = Health;
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            TakeDamage(BaseDamage);
-        }
         if (Health <= 0)
         {
             Destroy(gameObject);
             SceneManager.LoadScene(0);
+        }
+    }
+    public void UpdateLevel(int Giveexp)
+    {
+        expierience += Giveexp;
+        if (expierience > expNeeded)
+        {
+            Level++;
+            expNeeded += (baseexpNeeded * 2);
+            SkillPoints++;
+            sk.UpdateAllSkills();
         }
     }
 }

@@ -8,9 +8,11 @@ public class Walk : MonoBehaviour
 
     public Animator anim;
     public Rigidbody2D Player;
+    public float DefaultSpeed;
     public float SpeedPlayer;
-    Vector2 movement;
+    public Vector2 movement;
     Vector2 mousePos;
+    
 
     public float dashCooldown;
     public float dashDistance;
@@ -23,12 +25,15 @@ public class Walk : MonoBehaviour
     public Camera cam;
     public ParticleSystem blood;
 
+    public Skill ESkill;
+
+    public bool walkingWithCamera =false;
     public bool IsWalking = false; 
     // Start is called before the first frame update
     void Start()
-    {
-
-        SpeedPlayer = 4;
+    {     
+        DefaultSpeed = 4;
+        SpeedPlayer = DefaultSpeed;
     }
 
     void Update()
@@ -48,19 +53,35 @@ public class Walk : MonoBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         anim.SetFloat("speed", movement.y);
-        
-      //  movement = transform.TransformDirection(movement);
+        if(walkingWithCamera)
+            movement = transform.TransformDirection(movement);
         Vector2 movewithcamera = (Player.position + movement.normalized * SpeedPlayer * Time.deltaTime);
+
         Player.MovePosition(movewithcamera);
         Vector2 lookDir = mousePos - Player.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         Player.rotation = angle;
-       
+        if (movement.x != 0 || movement.y != 0)
+            IsWalking = true;
+        else
+            IsWalking = false;
+        //SkillsManager();
+        
+    }
+    public void SkillsManager()
+    {
+        if(ESkill != null && ESkill.ID == 0)
+        {
+            UseDash();
+        }
+    }
+    public void UseDash()
+    {
         RaycastHit2D hit = Physics2D.Raycast(DashDetector.position, transform.up, dashDistance);
-     
+
         if (hit != null && hit.collider != null && hit.collider.CompareTag("Wall"))
         {
-            if(dashDistance > 0f)
+            if (dashDistance > 0f)
             {
                 dashDistance--;
             }
@@ -70,35 +91,31 @@ public class Walk : MonoBehaviour
             if (dashDistance < 5f)
                 dashDistance++;
         }
-            if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E))
         {
-            if(!isDash)
+            if (!isDash && dashDistance > 0)
                 StartCoroutine(DashTimer());
         }
-        if (movement.x != 0 || movement.y != 0)
-            IsWalking = true;
-        else
-            IsWalking = false;
+   
 
-        
     }
     IEnumerator DashTimer()
     {
-        if (dashDistance > 0)
-        {
+  
             isDash = true;
-            dashParticle.transform.position = Player.position;
-            dashParticle.Play();
+        
 
             Vector2 dash = new Vector2(0, dashDistance - 1);
             dash = transform.TransformDirection(dash);
             Vector2 movewithcamera = (Player.position + dash);
             Player.MovePosition(movewithcamera);
-        }
+        
         yield return new WaitForSeconds(dashCooldown);
         isDash = false;
     }
 
     // Update is called once per frame
-    
+
+   
+
 }

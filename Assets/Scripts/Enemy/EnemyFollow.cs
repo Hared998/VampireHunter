@@ -8,7 +8,7 @@ public class EnemyFollow : MonoBehaviour
     private Rigidbody2D rb;
     Vector2 movement;
     private EnemyController ec;
-    private float speed;
+    public float speed;
     private bool PlayerExit = false;
     private bool PlayerTrigger = false;
     private Vector3 LastPosition;

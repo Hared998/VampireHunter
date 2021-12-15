@@ -493,32 +493,39 @@ public class Coords
    
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
+
         Ctmp = new Coords(this.x - 1, this.y);
         tmp = new Vector3Int(this.x - 1, this.y, 0);
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
+
         Ctmp = new Coords(this.x, this.y+1);
         tmp = new Vector3Int(this.x, this.y + 1, 0);
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
+
         tmp = new Vector3Int(this.x, this.y - 1, 0);
         Ctmp = new Coords(this.x, this.y - 1);
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
+
         tmp = new Vector3Int(this.x - 1, this.y + 1, 0);
         Ctmp = new Coords(this.x - 1, this.y + 1);
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
-        Ctmp = new Coords(this.x - 1, this.y + 1);
-        tmp = new Vector3Int(this.x - 1, this.y + 1, 0);
+
+        Ctmp = new Coords(this.x - 1, this.y - 1);
+        tmp = new Vector3Int(this.x - 1, this.y - 1, 0);
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
+
         Ctmp = new Coords(this.x + 1, this.y + 1);
         tmp = new Vector3Int(this.x + 1, this.y + 1, 0);
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
-        tmp = new Vector3Int(this.x-1, this.y - 1, 0);
-        Ctmp = new Coords(this.x - 1, this.y - 1);
+
+        tmp = new Vector3Int(this.x + 1, this.y - 1, 0);
+        Ctmp = new Coords(this.x + 1, this.y - 1);
         if (Map.GetTile(tmp) == texture)
             Btmp += 1;
 

@@ -26,34 +26,28 @@ public class ARrow : MonoBehaviour
         Destroy(gameObject);
 
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+
+    void OnCollisionEnter2D(Collision2D col)
     {
-        if (collision.CompareTag("Enemy"))
+
+        if (col.gameObject.CompareTag("Enemy"))
         {
-     
-            Vector3 direction = collision.transform.position - Arrow.transform.position;
+
+            Vector2 direction = col.contacts[0].point - (Vector2)Arrow.transform.position;
             direction.y = 0;
-            collision.GetComponent<EnemyController>().TakeDamage(damage);
+            col.gameObject.GetComponent<EnemyController>().TakeDamage(damage);
             Destroy(gameObject);
-            collision.GetComponent<EnemyController>().EF.GetHit = true;
-            collision.GetComponent<Rigidbody2D>().AddForce(direction.normalized * 50f);
-            
+            col.gameObject.GetComponent<EnemyController>().EF.GetHit = true;
+            col.gameObject.GetComponent<Rigidbody2D>().AddForce(direction.normalized * 50f);
+
             Arrow.GetComponent<BoxCollider2D>().enabled = false;
         }
         else
         {
-    
-                Arrow.velocity = transform.up * 0;
-                StartCoroutine(Cleaner());
-       
+            Arrow.velocity = transform.up * 0;
+            StartCoroutine(Cleaner());
+
         }
-
-    }
-    void OnCollisionEnter2D(Collision2D col)
-    {
-
-        Arrow.velocity = transform.up * 0;
-        StartCoroutine(Cleaner());
     }
 }
  

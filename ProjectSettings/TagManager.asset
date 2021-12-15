@@ -10,6 +10,7 @@ TagManager:
   - Generator
   - Biome
   - Room
+  - Skill Tree
   layers:
   - Default
   - TransparentFX

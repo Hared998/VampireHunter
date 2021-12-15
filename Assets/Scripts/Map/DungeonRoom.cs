@@ -38,7 +38,7 @@ public class DungeonRoom : MonoBehaviour
         int filled = 0;
         foreach (var i in PaintChank.ListCoords)
         {
-            if (i.x % ChunkSize.x < (ChunkSize.x - 3) && i.y % ChunkSize.y < (ChunkSize.y - 3))
+            if (i.x % ChunkSize.x < (ChunkSize.x - biome.Skip) && i.y % ChunkSize.y < (ChunkSize.y - biome.Skip))
             {
                 float yCoord = (((float)i.x / ((MapSize.x * ChunkSize.x))) + RandomCoords) * Scale;
                 float xCoord = (((float)i.y / ((MapSize.y * ChunkSize.y))) + RandomCoords) * Scale;

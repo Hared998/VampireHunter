@@ -18,6 +18,8 @@ public class EnemyController : MonoBehaviour
     public float Health;
     public float Armor = 10;
 
+    public int exp = 50;
+
     private Collider2D PlayerCollider;
     public EnemyFollow EF;
     public Transform LasetStart;
@@ -36,8 +38,8 @@ public class EnemyController : MonoBehaviour
     public void AttacPlayer()
     {
         
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, 0.5f);
-        Debug.DrawRay(LasetStart.position, transform.up * 1, Color.red);
+        RaycastHit2D hit = Physics2D.Raycast(LasetStart.position, transform.up, 0.75f);
+        Debug.DrawRay(LasetStart.position, transform.up * 0.75f, Color.red);
         
         if (hit != null && hit.collider != null && hit.collider.tag == "Player")
         {
@@ -104,6 +106,7 @@ public class EnemyController : MonoBehaviour
 
         if (Health <= 0)
         {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>().UpdateLevel(exp);
             Destroy(gameObject);
             ParticleSystem CreateBlood = Instantiate(blood, transform.position, transform.rotation);
             CreateBlood.Play();

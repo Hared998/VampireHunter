@@ -13,6 +13,7 @@ public class DungeonGenerator : MonoBehaviour
     public Chunk chunk;
     public Map DungeonMap;
     public Tilemap botMap;
+    public Tilemap backgroundMap;
     public Tilemap decorateMap;
 
     public Text Biomename;
@@ -405,9 +406,9 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < DungeonMap.Chunks.Count; i++)
         {
             DungeonMap.Chunks[i] = RG.GenerateRoom(DungeonMap.Chunks[i], start,biome);
-            Debug.Log("eldo");
+
             ListChunk.Add(DungeonMap.Chunks[i]);
-            Debug.Log("eld2o");
+
         }
         
         
@@ -415,7 +416,7 @@ public class DungeonGenerator : MonoBehaviour
         DungeonMap.Connections = DungeonMap.Prim(DungeonMap.Chunks[start], DungeonMap.Chunks);
         int max = 0;
         int id = 0;
-        Debug.Log("eld3o");
+
         foreach (var i in DungeonMap.Connections)
         {
             i.Parentb.cost = i.Parenta.cost + 1;
@@ -424,9 +425,8 @@ public class DungeonGenerator : MonoBehaviour
                 max = (int)i.Parentb.cost;
                 id = i.Parentb.ID;
             }
-            
+
         }
-        Debug.Log("eldo4");
         foreach (var i in DungeonMap.Connections)
         {
             if (i.Parentb.ID == id)
@@ -676,15 +676,27 @@ public class DungeonGenerator : MonoBehaviour
         }
         
     }
-    public void Generate(int x, int y, int mapsizex, int mapsizey)
+    public void Generate(int x, int y, int mapsizex, int mapsizey, string biome_name)
     {
         
         GameObject[] GetBiome = GameObject.FindGameObjectsWithTag("Biome");
-        Biomes biome = GetBiome[Random.Range(0,GetBiome.Length)].GetComponent<Biomes>();
+        //Biomes biome = GetBiome[Random.Range(0,GetBiome.Length)].GetComponent<Biomes>();
+        Debug.Log(biome_name);
+        Biomes biome = null;
+        foreach(var i in GetBiome)
+        {
+            Debug.Log(i.name + "-" + biome_name);
+            if (i.name == biome_name)
+            {
+                Debug.Log("Mam");
+                biome = i.GetComponent<Biomes>();
+                break;
+            }
+        }
+        Debug.Log(biome.name);
         decorateMap.ClearAllTiles();
         botMap.ClearAllTiles();
         ListWall = new List<Coords>();
-        Biomename.text = biome.name;
         MapSize = new Coords(mapsizex, mapsizey);
         ChunkSize = new Coords(x,y);
         //if (x > y)
@@ -704,6 +716,7 @@ public class DungeonGenerator : MonoBehaviour
        
         if (biome.TypeGenerate == Biomes.Generate.RoadOnly)
         {
+          
             RoadGenerate(biome, start);
         }
         else if (biome.TypeGenerate == Biomes.Generate.Rooms)
@@ -717,8 +730,12 @@ public class DungeonGenerator : MonoBehaviour
         }
         
         DungeonMap = GenerateMainDecorate(biome, ListChunk, botMap);
+
         CreateWall(biome);
+
         PaintVoid(biome);
+        if(biome.Void != null)
+         PaintBackground(biome);
 
 
 
@@ -928,80 +945,115 @@ public class DungeonGenerator : MonoBehaviour
 //                    tmpcol.transform.parent = ParentCol.transform;
 
 
-                    botMap.SetTile(PaintPixel, biomes.Void);
+                    botMap.SetTile(PaintPixel, biomes.Wall);
      
+                }
+            }
+        }
+    }
+    public void PaintBackground(Biomes biomes)
+    {
+        foreach (var i in ListChunk)
+        {
+            foreach (var j in i.ListCoords)
+            {
+                Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
+                if (backgroundMap.GetTile(PaintPixel) == null)
+                {
+                    //Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                    //                    tmpcol.transform.parent = ParentCol.transform;
+
+
+                    backgroundMap.SetTile(PaintPixel, biomes.Void);
+
                 }
             }
         }
     }
     public void CreateWall(Biomes biome)
     {
-        if(biome.TypeGenerate != Biomes.Generate.RoadOnly)
+        foreach (var i in ListChunk)
         {
-            foreach (var i in ListChunk)
+            if (!biome.FullRoad && !i.IsUesed)
             {
-                if (i.IsUesed)
+                foreach (var j in i.ListCoords)
                 {
-                    if (!biome.FullRoad)
+                    // Tworzenie Drogi g³ównie na ³aczeniach
+
+                    Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
+
+                    if (j.IsNearTextureWith(botMap, biome.Ground) > 3 && j.IsNearTextureWith(botMap, biome.Road) > 0)
                     {
-                        foreach (var j in i.ListCoords)
-                        {
-                            // Tworzenie Drogi g³ównie na ³aczeniach
+                        botMap.SetTile(PaintPixel, biome.Ground);
 
-                            Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
-
-                            if (j.IsNearTextureWith(botMap, biome.Ground) > 3 && j.IsNearTextureWith(botMap, biome.Road) > 0)
-                            {
-                                botMap.SetTile(PaintPixel, biome.Ground);
-                               
-                                j.id_chunk = i.ID;
-                            }
-                        }
+                        j.id_chunk = i.ID;
                     }
-                    foreach (var j in i.ListCoords)
+                }
+            }
+        }
+        foreach (var i in ListChunk)
+        {
+            if (!biome.FullRoad && i.IsUesed)
+            {
+                foreach (var j in i.ListCoords)
+                {
+                    // Tworzenie Drogi g³ównie na ³aczeniach
+
+                    Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
+
+                    if (j.IsNearTextureWith(botMap, biome.Ground) > 3 && j.IsNearTextureWith(botMap, biome.Road) > 0)
                     {
+                        botMap.SetTile(PaintPixel, biome.Ground);
 
-                        Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
-                        if (botMap.GetTile(PaintPixel) == null)
-                        {
+                        j.id_chunk = i.ID;
+                    }
+                }
+            }
 
-                            if (j.IsNearTextureWith(botMap, biome.Ground) > 0 || (j.IsNearTextureWith(botMap, biome.Road) > 0))
-                            {
-                                Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
-                                tmpcol.transform.parent = ParentCol.transform; 
-                                botMap.SetTile(PaintPixel, biome.Wall);
-                                j.id_chunk = i.ID;
-                                ListWall.Add(j);
+            foreach (var j in i.ListCoords)
+            {
 
-                            }
-                        }
+                Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
+                if (botMap.GetTile(PaintPixel) == null)
+                {
 
-                        if (biome.Ground == botMap.GetTile(PaintPixel) && (j.x == ((MapSize.x * ChunkSize.x) - 1) || j.y == ((MapSize.y * ChunkSize.y) - 1)) || biome.Road == botMap.GetTile(PaintPixel) && (j.x == ((MapSize.x * ChunkSize.x) - 1) || j.y == ((MapSize.y * ChunkSize.y) - 1)))
-                        {
-                            botMap.SetTile(PaintPixel, null);
-                            botMap.SetTile(PaintPixel, biome.Wall);
-                            Collider2D tmpcol =Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
-                            tmpcol.transform.parent = ParentCol.transform;
-                            j.id_chunk = i.ID;
-                            ListWall.Add(j);
-                        }
-                        else if (biome.Ground == (botMap.GetTile(PaintPixel)) && (j.x == 0 || j.y == 0) || biome.Road == (botMap.GetTile(PaintPixel)) && (j.x == 0 || j.y == 0))
-                        {
-                            botMap.SetTile(PaintPixel, null);
-                            botMap.SetTile(PaintPixel, biome.Wall);
-                            j.id_chunk = i.ID;
-                            Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
-                            tmpcol.transform.parent = ParentCol.transform;
-
-                            ListWall.Add(j);
-                        }
-
+                    if (j.IsNearTextureWith(botMap, biome.Ground) > 0 || (j.IsNearTextureWith(botMap, biome.Road) > 0))
+                    {
+                        Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                        tmpcol.transform.parent = ParentCol.transform;
+                        botMap.SetTile(PaintPixel, biome.Wall);
+                        j.id_chunk = i.ID;
+                        ListWall.Add(j);
 
                     }
                 }
 
+                if (biome.Ground == botMap.GetTile(PaintPixel) && (j.x == ((MapSize.x * ChunkSize.x) - 1) || j.y == ((MapSize.y * ChunkSize.y) - 1)) || biome.Road == botMap.GetTile(PaintPixel) && (j.x == ((MapSize.x * ChunkSize.x) - 1) || j.y == ((MapSize.y * ChunkSize.y) - 1)))
+                {
+                    botMap.SetTile(PaintPixel, null);
+                    botMap.SetTile(PaintPixel, biome.Wall);
+                    Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                    tmpcol.transform.parent = ParentCol.transform;
+                    j.id_chunk = i.ID;
+                    ListWall.Add(j);
+                }
+                else if (biome.Ground == (botMap.GetTile(PaintPixel)) && (j.x == 0 || j.y == 0) || biome.Road == (botMap.GetTile(PaintPixel)) && (j.x == 0 || j.y == 0))
+                {
+                    botMap.SetTile(PaintPixel, null);
+                    botMap.SetTile(PaintPixel, biome.Wall);
+                    j.id_chunk = i.ID;
+                    Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
+                    tmpcol.transform.parent = ParentCol.transform;
+
+                    ListWall.Add(j);
+                }
+
+
             }
         }
+
+
+
     }
     public void PaintConnect(Biomes biome,Coords first, Coords seconds, RuleTile ground)
     {
