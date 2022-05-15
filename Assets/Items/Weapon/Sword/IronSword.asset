@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1284fe41e200ae341a5b0ad6736bfaa9, type: 3}
+  m_Name: IronSword
+  m_EditorClassIdentifier: 
+  idItem: 4002
+  itemName: Iron Sword
+  typeItem: 4
+  descriptionItem: 
+  isEnemyGet: 1
+  isActive: 0
+  efectList:
+  - {fileID: 11400000, guid: 699fcd3e23b1f174e91ac31d8d3dc381, type: 2}
+  - {fileID: 11400000, guid: a7d0a3d5ba709ea4a82d334f0d85e90c, type: 2}
+  - {fileID: 11400000, guid: 8b2f08f145ad1b44ca9aaa1b6f9593cc, type: 2}
+  animation: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: edb30a978d3048d4995a54c27a369c73, type: 3}
+  WearableIcon: {fileID: 21300000, guid: b76715d9b72db034384ae753197e1d98, type: 3}
+  AnimationIcon: {fileID: 21300000, guid: 3b3e2d02388cd904a9e8bef3c72d8899, type: 3}

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0dfa6f81357ab146970128b92b54a8f, type: 3}
+  m_Name: SpecialBoots
+  m_EditorClassIdentifier: 
+  idItem: 3002
+  itemName: Special Boots
+  typeItem: 3
+  descriptionItem: 
+  isEnemyGet: 1
+  isActive: 0
+  efectList:
+  - {fileID: 11400000, guid: 032cf09ff439680439d9b33de4a24201, type: 2}
+  - {fileID: 11400000, guid: 77ead91a1ffae5741a3b982a2584f48e, type: 2}
+  - {fileID: 11400000, guid: 83341db2a577dbc4dbb47f2ac747a7c7, type: 2}
+  animation: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: c1f2622deb53a97408d7cb8259ff2d72, type: 3}
+  WearableIcon: {fileID: 21300000, guid: c1f2622deb53a97408d7cb8259ff2d72, type: 3}
+  AnimationIcon: {fileID: 0}
