@@ -8,6 +8,7 @@ public class CameManager : MonoBehaviour
     public Vector3 offset;
     public float smoothSpeed = 0.125f;
     private Vector3 velocity = Vector3.one;
+    public DiscoverMap dm;
     // Start is called before the first frame update
 
     // Update is called once per frame

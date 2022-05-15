@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1fa964d1a1cd464e89828c529932bb6, type: 3}
+  m_Name: AoE Utility 2
+  m_EditorClassIdentifier: 
+  ID: 6
+  Name: Utility 2
+  cooldownTime: 3
+  activeTime: 0.5
+  dashParticle: {fileID: 3124794309618650638, guid: 9fa33c7ea792a024982f18a34518f1a4,
+    type: 3}
+  radiusDamage: 8
+  basicDamage: 80
+  usingSpeedPlayer: 1

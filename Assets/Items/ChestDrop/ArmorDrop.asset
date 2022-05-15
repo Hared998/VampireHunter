@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22275a66d5807c04b9e1c9c54f36d9d5, type: 3}
+  m_Name: ArmorDrop
+  m_EditorClassIdentifier: 
+  common:
+  - {fileID: 11400000, guid: 9a5c908e740961043b381650fe75ee0d, type: 2}
+  - {fileID: 11400000, guid: ba3eab75af01f4a4f983f6382ef27439, type: 2}
+  - {fileID: 11400000, guid: 6a7b0bb0644bf414b98479096858a034, type: 2}
+  - {fileID: 11400000, guid: d8f10d383e2dfa34681950a69f14e2ee, type: 2}
+  uncommon:
+  - {fileID: 11400000, guid: 8d293cbc84d225c428da0b974f0cac40, type: 2}
+  - {fileID: 11400000, guid: 9e2d318ba1cb84d4fa1d45619693b109, type: 2}
+  - {fileID: 11400000, guid: 55d95b83fd092a7489d699cd03ff80e9, type: 2}
+  - {fileID: 11400000, guid: bf2e3cd7b6f3f7741a3d5cd8644fd606, type: 2}
+  - {fileID: 11400000, guid: c28e0d1be8f1f964487ab1d021684a6f, type: 2}
+  rare:
+  - {fileID: 11400000, guid: a5f85b2e9372c014d89ee905fa6011f4, type: 2}
+  - {fileID: 11400000, guid: c28e0d1be8f1f964487ab1d021684a6f, type: 2}
+  - {fileID: 11400000, guid: c13fa0baab3ec99408f5c6798e32532c, type: 2}

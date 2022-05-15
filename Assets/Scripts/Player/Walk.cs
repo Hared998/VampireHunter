@@ -28,27 +28,35 @@ public class Walk : MonoBehaviour
     public Skill ESkill;
 
     public bool walkingWithCamera =false;
-    public bool IsWalking = false; 
+    public bool IsWalking = false;
+
+    private Character character;
     // Start is called before the first frame update
     void Start()
     {     
         DefaultSpeed = 4;
+        character = gameObject.GetComponent<Character>();
+        List<Statistic> statisticsList = character.ReturnStatiticList();
+        foreach(var stat in statisticsList)
+        {
+            if(stat.statisticId == StatName.Speed)
+            {
+                if (stat.actualPoint > 0)
+                    DefaultSpeed = (float)stat.actualPoint;
+            }
+        }
+
         SpeedPlayer = DefaultSpeed;
     }
 
     void Update()
     {
-       if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            SceneManager.LoadScene(0);            
-        }
-        
     }
 
 
     void FixedUpdate()
     {
-        
+
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
@@ -66,54 +74,19 @@ public class Walk : MonoBehaviour
         else
             IsWalking = false;
         //SkillsManager();
-        
-    }
-    public void SkillsManager()
-    {
-        if(ESkill != null && ESkill.ID == 0)
+        if (IsWalking == true)
         {
-            UseDash();
-        }
-    }
-    public void UseDash()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(DashDetector.position, transform.up, dashDistance);
-
-        if (hit != null && hit.collider != null && hit.collider.CompareTag("Wall"))
-        {
-            if (dashDistance > 0f)
+            List<Statistic> statisticsList = character.ReturnStatiticList();
+            foreach (var stat in statisticsList)
             {
-                dashDistance--;
+                if (stat.statisticId == StatName.Speed)
+                {
+                    if (stat.actualPoint > 0)
+                        SpeedPlayer = (float)stat.actualPoint;
+                }
             }
         }
-        else
-        {
-            if (dashDistance < 5f)
-                dashDistance++;
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            if (!isDash && dashDistance > 0)
-                StartCoroutine(DashTimer());
-        }
-   
-
     }
-    IEnumerator DashTimer()
-    {
-  
-            isDash = true;
-        
-
-            Vector2 dash = new Vector2(0, dashDistance - 1);
-            dash = transform.TransformDirection(dash);
-            Vector2 movewithcamera = (Player.position + dash);
-            Player.MovePosition(movewithcamera);
-        
-        yield return new WaitForSeconds(dashCooldown);
-        isDash = false;
-    }
-
     // Update is called once per frame
 
    

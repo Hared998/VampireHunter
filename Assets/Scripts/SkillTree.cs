@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class SkillTree : MonoBehaviour
 {
     public static SkillTree skillTree;
@@ -26,8 +27,13 @@ public class SkillTree : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.P))
         {
-            Time.timeScale = 0;
-            SkillMenu.active =  true;
+            if (SkillMenu.active)
+                Time.timeScale = 1;
+            else
+                Time.timeScale = 0;
+            
+            SkillMenu.active = !SkillMenu.active;
+            
         }
     }
     public void RenewGame()
@@ -45,14 +51,32 @@ public class SkillTree : MonoBehaviour
 
     public void UpdateAllSkills()
     {
+  
         SkillPoints = Player.GetComponent<PlayerStats>().SkillPoints - SpendPoints;
         Level = Player.GetComponent<PlayerStats>().Level;
 
         skillPointsText.text = "Skill Points: " + SkillPoints;
         requiredLevelText.text = "Level: " + Level;
-
+        if (ListofSkills.Count == 0)
+        {
+            foreach (var skill in SkillHandler.GetComponentsInChildren<Skill>())
+            {
+                skill.SetSkillTree(this);
+                skill.UpdateST();
+            }
+        }
         foreach (var skill in ListofSkills)
             skill.UpdateST();
+    }
+    public List<SaveSkill> SaveSendSkills()
+    {
+        List<SaveSkill> tmp = new List<SaveSkill>();
+        foreach (var skill in ListofSkills)
+        {
+            tmp.Add(new SaveSkill(skill.ability.ID, skill.state));
+        }
+        return tmp;
+
     }
 
 }

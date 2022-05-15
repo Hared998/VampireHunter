@@ -5,7 +5,13 @@ using UnityEngine.Tilemaps;
 
 public class Biomes : MonoBehaviour
 {
+
+
     public string name;
+
+    public int LevelRequirment = 1;
+    public int LevelMax = 0;
+
     //Wszystkie tekstury biomu
     public RuleTile Ground;
     public RuleTile Wall;
@@ -42,7 +48,12 @@ public class Biomes : MonoBehaviour
 
     //Rozmiary pomieszczeñ
     public int maxRoomx;
+    public int maxRoomy;
+    public int minRoomx;
     public int minRoomy;
+
+    public int minMapSize;
+    public int maxMapSize;
 
     //Przeciwnicy
     public int maxEnemyChunk;
@@ -51,6 +62,23 @@ public class Biomes : MonoBehaviour
     public float minFill;
     public float maxFill;
 
+    private bool bossSet;
+
+
+    public GameObject GetEnemy()
+    {
+        if (Enemy.Count > 1)
+            return Enemy[Random.Range(0, Enemy.Count)];
+        else
+            return Enemy[0];
+    }
+    public GameObject GetBoss()
+    {
+        if (Boss.Count > 1 )
+            return Boss[Random.Range(0, Boss.Count)];
+        else
+            return Boss[0];
+    }
     public Room GetRoomLast()
     {
         List<GameObject> FindedRooms = new List<GameObject>();
@@ -81,11 +109,22 @@ public class Biomes : MonoBehaviour
             return RoomCheckerLast(FindedRooms);
         
     }
-    
+    public Coords getRandomRoomSize()
+    {
+        Coords tmpCoords = new Coords(Random.Range(minRoomx, maxRoomx), Random.Range(minRoomy, maxRoomy));
+        return tmpCoords;
+    }
+    public Coords getRandomMapSize()
+    {
+        
+        Coords tmpCoords = new Coords(Random.Range(minMapSize, maxMapSize), Random.Range(minMapSize, maxMapSize));
+        if (tmpCoords.x == 1 && tmpCoords.y == 1)
+            tmpCoords.x++;
+        return tmpCoords;
+    }
     public Room GetRoom(int chunk, int start)
     {
         List<GameObject> FindedRooms  = new List<GameObject>();
-        
         GameObject[] Rooms = GameObject.FindGameObjectsWithTag("Room");
      
         foreach (var i in Rooms)
@@ -107,6 +146,15 @@ public class Biomes : MonoBehaviour
     public Room RoomChecker(List<GameObject> FindedRooms, int chunk, int start)
     {
         Room randr = FindedRooms[Random.Range(0, FindedRooms.Count)].GetComponent<Room>();
+
+        if (randr.TypeGenerate == Room.Generate.BossRoom && bossSet)
+        {
+            return RoomChecker(FindedRooms, chunk, start);
+        }
+        else if (randr.TypeGenerate == Room.Generate.BossRoom && !bossSet)
+        {
+            bossSet = true;
+        }
         if (start == chunk)
         {
             if (randr.name == "Start")
@@ -117,12 +165,13 @@ public class Biomes : MonoBehaviour
         }
         if (randr.name == "Start" || randr.name == "End")
             return RoomChecker(FindedRooms, chunk, start);
+  
         return randr;
     }
 
-    void Start()
+    void Awake()
     {
-        
+        bossSet = false;
     }
 
     // Update is called once per frame

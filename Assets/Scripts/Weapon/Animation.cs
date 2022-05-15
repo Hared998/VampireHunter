@@ -11,7 +11,7 @@ public class Animation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        sht = gameObject.GetComponent<Shooting>();
     }
 
     // Update is called once per frame

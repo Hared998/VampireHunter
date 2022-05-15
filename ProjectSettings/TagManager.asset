@@ -11,6 +11,12 @@ TagManager:
   - Biome
   - Room
   - Skill Tree
+  - ItemDestroy
+  - AbilitiyHandler
+  - MAP
+  - ItemManager
+  - InventoryMenager
+  - console
   layers:
   - Default
   - TransparentFX
@@ -32,7 +38,7 @@ TagManager:
   - EnemyWeapon
   - BossWeakPoint
   - Bullet
-  - 
+  - Map
   - 
   - 
   - 
@@ -60,6 +66,9 @@ TagManager:
   - name: Background
     uniqueID: 3786877821
     locked: 0
+  - name: Onbackground
+    uniqueID: 1071766569
+    locked: 0
   - name: Items
     uniqueID: 716365825
     locked: 0
@@ -68,7 +77,4 @@ TagManager:
     locked: 0
   - name: Walls
     uniqueID: 3045160761
-    locked: 0
-  - name: 
-    uniqueID: 1071766569
     locked: 0

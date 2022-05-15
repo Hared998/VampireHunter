@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "AoE Utility", menuName = "Abilitys/AoE")]
 public class AoEAbility : Ability
 {
-    public GameObject dashParticle;
+    public GameObject attackParticle;
     public float radiusDamage;
     public float basicDamage;
     public float usingSpeedPlayer = 0;
@@ -13,6 +14,12 @@ public class AoEAbility : Ability
     private float actualRadius;
     private List<Collider2D> HitColliders;
 
+
+
+    public void Awake()
+    {
+        HitColliders = new List<Collider2D>();
+    }
     public override void Activate(GameObject parent)
     {
 
@@ -26,15 +33,18 @@ public class AoEAbility : Ability
         if(actualRadius > radiusDamage/2)
             walking.SpeedPlayer = walking.DefaultSpeed;
 
-    
+      
         foreach (var i in colliders)
         {
+
             if (i.CompareTag("Enemy") && !HitColliders.Contains(i))
             {
-                HitColliders.Add(i);
-                Debug.Log("Mamy wroga");
-                i.GetComponent<EnemyController>().Health -= basicDamage;
-                Debug.Log("Zadano " + radiusDamage + "obra¿eñ i zosta³o: " + i.GetComponent<EnemyController>().Health);
+                if (i.GetComponent<EnemyController>() != null)
+                {
+                    HitColliders.Add(i);
+                    i.GetComponent<EnemyController>().Health -= basicDamage;
+                }
+  
             }
         }
 
@@ -42,7 +52,7 @@ public class AoEAbility : Ability
     public override bool BeginActivate(GameObject parent)
     {
 
-        Instantiate(dashParticle, parent.transform.position, parent.transform.rotation);
+        Instantiate(attackParticle, parent.transform.position, parent.transform.rotation);
         parent.GetComponent<Walk>().SpeedPlayer = usingSpeedPlayer;
 
         return true;
@@ -57,7 +67,7 @@ public class AoEAbility : Ability
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(dashParticle.transform.position, actualRadius);
+        Gizmos.DrawSphere(attackParticle.transform.position, actualRadius);
     }
 }
 

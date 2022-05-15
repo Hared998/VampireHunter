@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class EnemyFollow : MonoBehaviour
 {
+
+    public EnemyAI AI;  
     public GameObject Enemy;
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     Vector2 movement;
     private EnemyController ec;
     public float speed;
@@ -23,6 +25,7 @@ public class EnemyFollow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+   
         ec = Enemy.GetComponent<EnemyController>();
         speed = ec.speed;
         rb = Enemy.GetComponent<Rigidbody2D>();
@@ -31,6 +34,7 @@ public class EnemyFollow : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            AI.EnemyActive = true;
             PlayerExit = false;
             PlayerTrigger = true;
             Vector3 direction = collision.transform.position - Enemy.transform.position + offset;

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -159980305354440134}
   - component: {fileID: 2953684200055187417}
   m_Layer: 0
-  m_Name: kusza
+  m_Name: Ranged
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

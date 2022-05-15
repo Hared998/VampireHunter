@@ -12,12 +12,7 @@ public class ButtonGeneratemap : MonoBehaviour
     public Dropdown biome;
     // Start is called before the first frame update
 
-    public void GenerateMap()
-    {
-        GameObject generator = GameObject.FindGameObjectsWithTag("Generator")[0];
-        generator.GetComponent<DungeonGenerator>().Generate(int.Parse(x.text), int.Parse(y.text), int.Parse(mapsizex.text), int.Parse(mapsizey.text), biome.options[biome.value].text);
-
-    }
+   
 
     void Start()
     {

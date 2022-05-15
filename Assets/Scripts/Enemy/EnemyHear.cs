@@ -5,13 +5,13 @@ using UnityEngine;
 public class EnemyHear : MonoBehaviour
 {
     public GameObject Enemy;
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private Vector3 velocity = Vector3.one;
     public float smoothspeed;
     // Start is called before the first frame update
     void Start()
     {
-        rb = Enemy .GetComponent<Rigidbody2D>();
+        rb = Enemy.GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -25,16 +25,14 @@ public class EnemyHear : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-
-
-            if (collision.GetComponent<Walk>().IsWalking && !Enemy.GetComponent<EnemyController>().isAttack)
+            if (collision.GetComponent<Walk>().IsWalking && !Enemy.GetComponentInParent<EnemyController>().isAttack)
             {
-
+                
                 Vector3 direction = collision.transform.position - Enemy.transform.position;
 
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+                Enemy.transform.rotation = Quaternion.LookRotation(direction) * Quaternion.Euler(0,0,90f);
+                //float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
 
-                rb.rotation = angle;
             }
 
         }

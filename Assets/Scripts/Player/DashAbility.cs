@@ -15,7 +15,6 @@ public class DashAbility : Ability
         if (walking.IsWalking)
         {
             Instantiate(dashParticle, walking.Player.position, walking.transform.rotation);
-            Debug.Log("Odpalam!");
             return true;
         }
         else

@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+[System.Serializable]
+public enum SkillState
+{
+    forbuy,
+    bought,
+    used
+}
+
 public class Skill : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public Ability ability;
-    public int ID;
     public string name;
     [TextArea]
     public string description;
@@ -26,6 +33,20 @@ public class Skill : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDra
     private CanvasGroup canvasGroup;
     private RectTransform rectTransformation;
     private RectTransform startRectTransform;
+
+    public SkillState state;
+
+    private ConnectToAbillity cta;
+
+    public void SetSkillTree(SkillTree tree)
+    {
+        skillTree = tree;
+    }
+    public void start()
+    {
+        state = SkillState.forbuy;
+    }
+    
     // Start is called before the first frame update
     public void Start()
     {
@@ -38,15 +59,17 @@ public class Skill : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDra
     public void UpdateST()
     {
 
-        if (used)
+
+        if (state == SkillState.used)
         {
+ 
             gameObject.GetComponent<Image>().color = Color.green;
         }
-        else if (!used && bought)
+        else if (state != SkillState.used && state == SkillState.bought)
         {
             gameObject.GetComponent<Image>().color = Color.yellow;
         }
-        else if (requiredSkill != null && !requiredSkill.bought)
+        else if ((requiredSkill != null && requiredSkill.state != SkillState.bought) || skillTree.Level < requiredLevel || skillTree.SkillPoints < 0)
         {
             gameObject.GetComponent<Image>().color = Color.red;
         }
@@ -56,9 +79,9 @@ public class Skill : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDra
     }
     public void buy()
     {
-        if (skillTree.SkillPoints > 0 && !bought && (requiredSkill != null && requiredSkill.bought || requiredSkill == null) && skillTree.Level >= requiredLevel)
+        if (skillTree.SkillPoints > 0 && state == SkillState.forbuy && (requiredSkill != null && requiredSkill.state != SkillState.forbuy || requiredSkill == null) && skillTree.Level >= requiredLevel)
         {
-            bought = true;
+            state = SkillState.bought;
             skillTree.SkillPoints--;
             skillTree.SpendPoints++;
         }
@@ -72,23 +95,23 @@ public class Skill : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IDra
     }
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+       
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (bought)
+        if (state == SkillState.bought)
         {
             canvasGroup.blocksRaycasts = false;
             canvasGroup.alpha = 0.8f;
-            Debug.Log("BeginDrag");
+  
         }
     
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (bought)
+        if (state == SkillState.bought)
         {
             rectTransformation.anchoredPosition += eventData.delta;
         }

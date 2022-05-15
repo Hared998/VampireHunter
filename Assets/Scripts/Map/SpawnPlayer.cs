@@ -13,6 +13,7 @@ public class SpawnPlayer : MonoBehaviour
     public Tilemap map;
     public GameObject AbilityMenuHandler;
     public Slider hp;
+    public Slider exp;
     public ParticleSystem DashParticle;
 
     public PlayerStats ps;
@@ -43,12 +44,13 @@ public class SpawnPlayer : MonoBehaviour
         Vector3 SpawnPoint = new Vector3(najx, najy, 0);
         GameObject CopyPlayer = Instantiate(Player, SpawnPoint + offset, Quaternion.identity);
         ParticleSystem DParticle = Instantiate(DashParticle, Vector3.zero, Quaternion.identity);
-        Debug.Log(cam.name);
-        CopyPlayer.GetComponent<PlayerStats>().HealthBar = hp;
+        PlayerStats ps = CopyPlayer.GetComponent<PlayerStats>();
+        ps.HealthBar = hp;
+        ps.ExpBar = exp;
 
         CopyPlayer.GetComponent<Walk>().dashParticle = DParticle;
         skillTree.Player = CopyPlayer;
-        CopyPlayer.GetComponent<PlayerStats>().sk = skillTree;
+        ps.sk = skillTree;
         skillTree.UpdateAllSkills();
         
     
@@ -60,17 +62,19 @@ public class SpawnPlayer : MonoBehaviour
         List<AbilityHolder> abilityHolder = new List<AbilityHolder>();
         abilityHolder.AddRange(CopyPlayer.GetComponentsInChildren<AbilityHolder>());
         abillityMenu.AddRange(AbilityMenuHandler.GetComponentsInChildren<ConnectToAbillity>());
+        
         foreach (var i in abilityHolder)
         {
             foreach (var j in abillityMenu)
             {
-                Debug.Log(j.ID + " : " + i.ID);
                 if(i.ID == j.ID)
                 {
                     j.abHolder = i;
                 }
             }
         }
+        ps.LoadData(abillityMenu);
+        skillTree.UpdateAllSkills();
     }        
     
 

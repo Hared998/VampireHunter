@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -8,17 +9,20 @@ public class EnemyController : MonoBehaviour
     public Vector3 offset;
 
     PlayerStats dealdamage;
-
+    public LayerMask IgnoreMe;
     public float NextAttack;
     public float TimeAttack;
     public float NextTimeAttack;
     public float Cooldown;
 
     public float speed;
+
+    public float maxHealth;
     public float Health;
     public float Armor = 10;
 
     public int exp = 50;
+    
 
     private Collider2D PlayerCollider;
     public EnemyFollow EF;
@@ -26,10 +30,15 @@ public class EnemyController : MonoBehaviour
     public bool isAttack = false;
     public bool Zaatakowano = false;
 
+    public Slider sliderhealth;
+
     public ParticleSystem blood;
+
+    public ProgressMission updatemission;
     void Start()
     {
-
+        maxHealth = Health;
+        sliderhealth.value = Health/maxHealth;
         PlayerCollider = null;
         NextAttack = Cooldown +Time.deltaTime;
         NextTimeAttack = TimeAttack + Time.deltaTime;
@@ -37,9 +46,9 @@ public class EnemyController : MonoBehaviour
 
     public void AttacPlayer()
     {
-        
-        RaycastHit2D hit = Physics2D.Raycast(LasetStart.position, transform.up, 0.75f);
-        Debug.DrawRay(LasetStart.position, transform.up * 0.75f, Color.red);
+      
+        RaycastHit2D hit = Physics2D.Raycast(LasetStart.position, LasetStart.transform.parent.up, 1f,IgnoreMe);
+        Debug.DrawRay(LasetStart.position, LasetStart.transform.parent.up * 1f, Color.red);
         
         if (hit != null && hit.collider != null && hit.collider.tag == "Player")
         {
@@ -53,11 +62,13 @@ public class EnemyController : MonoBehaviour
     }
     public void TakeDamage(float Damage)
     {
+
         float ReduceDamage = (100 - Armor) / 100;
         float RealDamage = Damage - ReduceDamage;
         RealDamage = Mathf.Round(RealDamage);
         Health -= RealDamage;
 
+      
 
     }
     public void GiveDamage(Collider2D player)
@@ -80,6 +91,8 @@ public class EnemyController : MonoBehaviour
     }
     public void Update()
     {
+
+        sliderhealth.value = Health/maxHealth;
         AttacPlayer();
         if (PlayerCollider != null)
         {
@@ -108,6 +121,9 @@ public class EnemyController : MonoBehaviour
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>().UpdateLevel(exp);
             Destroy(gameObject);
+            updatemission.Killed();
+            updatemission.calcEnemy();
+           
             ParticleSystem CreateBlood = Instantiate(blood, transform.position, transform.rotation);
             CreateBlood.Play();
         }

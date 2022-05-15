@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Ability : ScriptableObject
 {
+    public int ID;
     public string Name;
     public float cooldownTime;
     public float activeTime;

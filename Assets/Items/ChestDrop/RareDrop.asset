@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22275a66d5807c04b9e1c9c54f36d9d5, type: 3}
+  m_Name: RareDrop
+  m_EditorClassIdentifier: 
+  common:
+  - {fileID: 11400000, guid: aec00315493a4444383a6d761fb7a411, type: 2}
+  uncommon:
+  - {fileID: 11400000, guid: 447d30167cef2db4cbeee2d80b430399, type: 2}
+  - {fileID: 11400000, guid: 73aaf4abce737d74e98073b9803740e3, type: 2}
+  - {fileID: 11400000, guid: aec00315493a4444383a6d761fb7a411, type: 2}
+  - {fileID: 11400000, guid: 447d30167cef2db4cbeee2d80b430399, type: 2}
+  rare:
+  - {fileID: 11400000, guid: ee586181ead316c4b94e85c47bae1535, type: 2}
+  - {fileID: 11400000, guid: c13fa0baab3ec99408f5c6798e32532c, type: 2}
+  - {fileID: 11400000, guid: 70f969ce2152f4e448874e6e79e00d2f, type: 2}
+  - {fileID: 11400000, guid: 3d521bf3494accd44bbe63da22077248, type: 2}

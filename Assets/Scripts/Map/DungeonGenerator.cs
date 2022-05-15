@@ -15,6 +15,9 @@ public class DungeonGenerator : MonoBehaviour
     public Tilemap botMap;
     public Tilemap backgroundMap;
     public Tilemap decorateMap;
+    public Tilemap HiddenMap;
+
+    public Tile Blank;
 
     public Text Biomename;
 
@@ -31,13 +34,60 @@ public class DungeonGenerator : MonoBehaviour
     public int start;
     public bool chestSpawned;
     public Camera cam;
+
+    public GameObject ChestCollider;
+    public GameObject NextLevel;
+    public GameObject Destroyable;
+    public GameObject MapCollider;
     public Collider2D collider;
+
+
+
+    private int level;
     // Start is called before the first frame update
 
     void Start()
     {
-        cam.GetComponent<CameManager>().enabled = false;
+        SaveData data = Saving.LoadGameData();
+        level = 1;
+        if (data != null)
+        {
+            level = data.level;
+        }
 
+        cam.GetComponent<CameManager>().enabled = false;
+        GameObject[] listofbiomes = GameObject.FindGameObjectsWithTag("Biome");
+        Biomes tmp = FindRoom(level, listofbiomes);
+        if (tmp == null)
+        {
+            Debug.Log("Brak Map");
+        }
+        else {
+            Generate(tmp);
+            gameObject.GetComponent<SwitchHud>().swon();
+        }
+
+    }
+    public Biomes FindRoom(int level, GameObject[] listofbiomes)
+    {
+        List<GameObject> correctBiomes = new List<GameObject>();
+ 
+        foreach(var i in listofbiomes)
+        {
+            Biomes biom = i.GetComponent<Biomes>();
+            if (level >= biom.LevelRequirment && (biom.LevelMax == 0 || biom.LevelMax >= level))
+            {
+             
+                correctBiomes.Add(i);
+            }
+         
+        }
+        int rand = 0;
+        if (correctBiomes.Count > 0)
+           rand  = Random.Range(0, correctBiomes.Count);
+        Biomes tmp = correctBiomes[rand].GetComponent<Biomes>();
+        return tmp;
+    
     }
     public void SetPosition(float x, float y, float size)
     {
@@ -47,7 +97,6 @@ public class DungeonGenerator : MonoBehaviour
     }
     public int ExtrudeChance(float chance, int k)
     {
-
         float addpath = Random.Range(0.0f, 1.0f);
         if (addpath < chance)
         {
@@ -63,9 +112,9 @@ public class DungeonGenerator : MonoBehaviour
         Vector3Int tmp2 = new Vector3Int();
         Vector3Int center = new Vector3Int();
         int k = 0;
-        
-        k = ExtrudeChance(biome.roadChanceExtrude, k);
-        
+
+        //k = ExtrudeChance(biome.roadChanceExtrude, k);
+   
         for (int i = 0; i <= biome.roadSize + k; i++)
         {
             float random = Random.Range(0.0f, 1.0f);
@@ -75,33 +124,33 @@ public class DungeonGenerator : MonoBehaviour
                 if (direction == 2 || direction == 1)
                 {
                     
-                    if (i == biome.roadSize + k && k > 0)
-                    {
-                        if (random < biome.roadChanceSpawn)
-                            tmp = new Vector3Int(basepoint.x, basepoint.y + i, 0);
-                        if (random2 < biome.roadChanceSpawn)
-                            tmp2 = new Vector3Int(basepoint.x, basepoint.y - i, 0);
-                    }
-                    else
-                    {
+                    //if (i == biome.roadSize + k && k > 0)
+                    //{
+                    //    if (random < biome.roadChanceSpawn)
+                    //        tmp = new Vector3Int(basepoint.x, basepoint.y + i, 0);
+                    //    if (random2 < biome.roadChanceSpawn)
+                    //        tmp2 = new Vector3Int(basepoint.x, basepoint.y - i, 0);
+                    //}
+                    //else
+                    //{
                         tmp = new Vector3Int(basepoint.x, basepoint.y + i, 0);
                         tmp2 = new Vector3Int(basepoint.x, basepoint.y - i, 0);
-                    }
+                    //}
                 }
                 if (direction == 3 || direction == 4)
                 {
-                    if (i == biome.roadSize + k && k > 0)
-                    {
-                        if (random2 < biome.roadChanceSpawn)
-                            tmp = new Vector3Int(basepoint.x - 1, basepoint.y, 0);
-                        if (random < biome.roadChanceSpawn)
-                            tmp2 = new Vector3Int(basepoint.x + 1, basepoint.y, 0);
-                    }
-                    else
-                    {
+                    //if (i == biome.roadSize + k && k > 0)
+                    //{
+                    //    if (random2 < biome.roadChanceSpawn)
+                    //        tmp = new Vector3Int(basepoint.x - 1, basepoint.y, 0);
+                    //    if (random < biome.roadChanceSpawn)
+                    //        tmp2 = new Vector3Int(basepoint.x + 1, basepoint.y, 0);
+                    //}
+                    //else
+                    //{
                         tmp = new Vector3Int(basepoint.x - i, basepoint.y, 0);
                         tmp2 = new Vector3Int(basepoint.x + i, basepoint.y, 0);
-                    }
+                    //}
 
                 }
             }
@@ -206,78 +255,6 @@ public class DungeonGenerator : MonoBehaviour
         }
 
     }
-    //public void PrintRoadOutside(Biomes biome, int direction, Coords basepoint)
-
-    //{
-    //    Vector3Int tmp = new Vector3Int();
-    //    Vector3Int tmp2 = new Vector3Int();
-    //    Vector3Int center = new Vector3Int();
-    //    int k = 0;
-
-    //    k = ExtrudeChance(biome.roadChanceExtrude, k);
-
-    //    for (int i = 0; i <= biome.roadSizeMax + k; i++)
-    //    {
-    //        float random = Random.Range(0.0f, 1.0f);
-    //        float random2 = Random.Range(0.0f, 1.0f);
-    //        if (i > 0)
-    //        {
-    //            if (direction == 2 || direction == 1)
-    //            {
-
-    //                if (i == biome.roadSizeMax + k && k > 0)
-    //                {
-    //                    if (random < biome.roadChanceSpawn)
-    //                        tmp = new Vector3Int(basepoint.x, basepoint.y + i, 0);
-    //                    if (random2 < biome.roadChanceSpawn)
-    //                        tmp2 = new Vector3Int(basepoint.x, basepoint.y - i, 0);
-    //                }
-    //                else
-    //                {
-    //                    tmp = new Vector3Int(basepoint.x, basepoint.y + i, 0);
-    //                    tmp2 = new Vector3Int(basepoint.x, basepoint.y - i, 0);
-    //                }
-    //            }
-    //            if (direction == 3 || direction == 4)
-    //            {
-    //                if (i == biome.roadSizeMax + k && k > 0)
-    //                {
-    //                    if (random2 < biome.roadChanceSpawn)
-    //                        tmp = new Vector3Int(basepoint.x - 1, basepoint.y, 0);
-    //                    if (random < biome.roadChanceSpawn)
-    //                        tmp2 = new Vector3Int(basepoint.x + 1, basepoint.y, 0);
-    //                }
-    //                else
-    //                {
-    //                    tmp = new Vector3Int(basepoint.x - i, basepoint.y, 0);
-    //                    tmp2 = new Vector3Int(basepoint.x + i, basepoint.y, 0);
-    //                }
-
-    //            }
-    //        }
-    //        center = new Vector3Int(basepoint.x, basepoint.y, 0);
-
-    //        botMap.SetTile(center, null);
-    //        botMap.SetTile(center, biome.Road);
-
-
-    //        if (tmp != null)
-    //        {
-    //            botMap.SetTile(tmp, null);
-
-    //            botMap.SetTile(tmp, biome.Road);
-    //        }
-    //        if (tmp2 != null)
-    //        {
-    //            botMap.SetTile(tmp2, null);
-
-    //            botMap.SetTile(tmp2, biome.Road);
-    //        }
-
-
-    //    }
-
-    //}
     public Map RoadGenerate(Biomes biome, int start)
     {
         DungeonMap.CreateMap();
@@ -322,6 +299,8 @@ public class DungeonGenerator : MonoBehaviour
 
                 for (int k = tmp_l1.x; k >= tmp_l2.x; k--)
                 {
+  
+
                     Coords newCoords = new Coords();
                     if (tmp_l2.y > tmp_l1.y)
                     {
@@ -376,6 +355,7 @@ public class DungeonGenerator : MonoBehaviour
             {
                 for (int k = tmp_l1.y; k >= tmp_l2.y; k--)
                 {
+
                     Coords newCoords = new Coords();
                     if (tmp_l2.x > tmp_l1.x)
                     {
@@ -389,7 +369,7 @@ public class DungeonGenerator : MonoBehaviour
                     PrintRoad(biome, i.nextdirection, newCoords);
                 }
             }
-            
+
 
         }
         return DungeonMap;
@@ -406,12 +386,10 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < DungeonMap.Chunks.Count; i++)
         {
             DungeonMap.Chunks[i] = RG.GenerateRoom(DungeonMap.Chunks[i], start,biome);
-
+       
             ListChunk.Add(DungeonMap.Chunks[i]);
 
         }
-        
-        
         
         DungeonMap.Connections = DungeonMap.Prim(DungeonMap.Chunks[start], DungeonMap.Chunks);
         int max = 0;
@@ -444,6 +422,7 @@ public class DungeonGenerator : MonoBehaviour
 
                 for (int k = tmp_l1.x; k >= tmp_l2.x; k--)
                 {
+                    float rand = Random.Range(0f, 1f);
                     Coords newCoords = new Coords();
                     if (tmp_l2.y > tmp_l1.y)
                     {
@@ -453,7 +432,12 @@ public class DungeonGenerator : MonoBehaviour
                     {
                         tmp_l1.y--;
                     }
-
+      
+                    if (rand < biome.roadChanceSpawn && (tmp_l1.y % ChunkSize.y < ChunkSize.y && tmp_l1.y % ChunkSize.y > 0))
+                    {
+               
+                        tmp_l1.y ++;
+                    }
                     newCoords = new Coords(k, tmp_l1.y);
                     PrintRoad(biome, i.nextdirection, newCoords);
                     
@@ -463,6 +447,7 @@ public class DungeonGenerator : MonoBehaviour
             {
                 for (int k = tmp_l1.x; k <= tmp_l2.x; k++)
                 {
+                    float rand = Random.Range(0f, 1f);
                     Coords newCoords = new Coords();
                     if (tmp_l2.y > tmp_l1.y)
                     {
@@ -472,7 +457,11 @@ public class DungeonGenerator : MonoBehaviour
                     {
                         tmp_l1.y--;
                     }
-             
+                    if (rand < biome.roadChanceSpawn && (tmp_l1.y % ChunkSize.y < ChunkSize.y && tmp_l1.y % ChunkSize.y > 0))
+                    {
+                   
+                        tmp_l1.y --;
+                    }
                     newCoords = new Coords(k, tmp_l1.y);
                     PrintRoad(biome, i.nextdirection, newCoords);
                     
@@ -482,8 +471,8 @@ public class DungeonGenerator : MonoBehaviour
             {
                 for (int k = tmp_l1.y; k <= tmp_l2.y; k++)
                 {
+                    float rand = Random.Range(0f, 1f);
                     Coords newCoords = new Coords();
-
                     if (tmp_l2.x > tmp_l1.x)
                     {
                         tmp_l1.x++;
@@ -491,8 +480,13 @@ public class DungeonGenerator : MonoBehaviour
                     else if (tmp_l2.x < tmp_l1.x)
                     {
                         tmp_l1.x--;
+                    } 
+                    if (rand < biome.roadChanceSpawn && (tmp_l1.x % ChunkSize.x < ChunkSize.x && tmp_l1.x % ChunkSize.x > 0))
+                    {
+                   
+                        tmp_l1.x ++;
                     }
-                 
+                    
                     newCoords = new Coords(tmp_l1.x, k);
                     PrintRoad(biome, i.nextdirection, newCoords);
                    
@@ -502,6 +496,7 @@ public class DungeonGenerator : MonoBehaviour
             {
                 for (int k = tmp_l1.y; k >= tmp_l2.y; k--)
                 {
+                    float rand = Random.Range(0f, 1f);
                     Coords newCoords = new Coords();
                     if (tmp_l2.x > tmp_l1.x)
                     {
@@ -511,7 +506,12 @@ public class DungeonGenerator : MonoBehaviour
                     {
                         tmp_l1.x--;
                     }
-
+                    if (rand < biome.roadChanceSpawn && (tmp_l1.x % ChunkSize.x < ChunkSize.x && tmp_l1.x % ChunkSize.x > 0))
+                    {
+             
+                        tmp_l1.x --;
+                    }
+                   
                     //if (i.Parenta.Type.TypeGenerate == Room.Generate.Normal)
                     //{
 
@@ -595,6 +595,7 @@ public class DungeonGenerator : MonoBehaviour
 
                 for (int k = tmp_l1.x; k >= tmp_l2.x; k--)
                 {
+                    
                     Coords newCoords = new Coords();
                     if (tmp_l2.y > tmp_l1.y)
                     {
@@ -676,29 +677,14 @@ public class DungeonGenerator : MonoBehaviour
         }
         
     }
-    public void Generate(int x, int y, int mapsizex, int mapsizey, string biome_name)
+    public void Generate(Biomes biome)
     {
         
-        GameObject[] GetBiome = GameObject.FindGameObjectsWithTag("Biome");
-        //Biomes biome = GetBiome[Random.Range(0,GetBiome.Length)].GetComponent<Biomes>();
-        Debug.Log(biome_name);
-        Biomes biome = null;
-        foreach(var i in GetBiome)
-        {
-            Debug.Log(i.name + "-" + biome_name);
-            if (i.name == biome_name)
-            {
-                Debug.Log("Mam");
-                biome = i.GetComponent<Biomes>();
-                break;
-            }
-        }
-        Debug.Log(biome.name);
         decorateMap.ClearAllTiles();
         botMap.ClearAllTiles();
         ListWall = new List<Coords>();
-        MapSize = new Coords(mapsizex, mapsizey);
-        ChunkSize = new Coords(x,y);
+        MapSize = biome.getRandomMapSize();
+        ChunkSize = biome.getRandomRoomSize();
         //if (x > y)
         //{
         //    SetPosition(x * (mapsizex), y * (mapsizey), x * (mapsizex));
@@ -728,45 +714,48 @@ public class DungeonGenerator : MonoBehaviour
             GenerateRandomRoom(biome, start);
 
         }
-        
+
         DungeonMap = GenerateMainDecorate(biome, ListChunk, botMap);
 
-        CreateWall(biome);
 
-        PaintVoid(biome);
         if(biome.Void != null)
          PaintBackground(biome);
 
-
-
-
-
-
+        CreateWall(biome);
+        PaintVoid(biome);   
+        ProgressMission tmpmission = gameObject.GetComponent<ProgressMission>();
+        tmpmission.CounterMaxEnemy = 0;
+        tmpmission.pickMission(level);
 
         foreach (var i in ListChunk)
         {
-            for (int j = 0; j < 5; j++)
+            if (i.Type.TypeGenerate == Room.Generate.BossRoom)
             {
-                if (i.ID != start)
+                Vector2 tmp = gameObject.GetComponent<SpawnyEnemy>().SetBoss(ListChunk[i.ID], biome, tmpmission);
+            }
+            else
+            {
+                for (int j = 0; j < biome.maxEnemyChunk; j++)
                 {
-
-                    Vector2 tmp = gameObject.GetComponent<SpawnyEnemy>().SetEnemy(ListChunk[i.ID],biome);
-                  
+                    if (i.ID != start)
+                    {
+                        Vector2 tmp = gameObject.GetComponent<SpawnyEnemy>().SetEnemy(ListChunk[i.ID], biome, tmpmission);
+                    }
                 }
             }
 
         }
-        gameObject.GetComponent<ProgressMission>().SetEnemys();
-      
+
+        tmpmission.SetEnemys();
+
         gameObject.GetComponent<SpawnPlayer>().SetPlayer(ListChunk[start], DungeonMap.GetCenterOfChunk(ListChunk[start], biome.Ground,biome.Road, botMap,biome));
-        gameObject.GetComponent<SwitchHud>().sw();
+
     }
     public Map GenerateMainDecorate(Biomes biome, List<Chunk> ListChunk, Tilemap botMap)
     {
 
         foreach (var i in ListChunk)
         {
-
             if (i.Type.TypeGenerate == Room.Generate.Random && i.IsUesed)
             {
 
@@ -783,8 +772,9 @@ public class DungeonGenerator : MonoBehaviour
                             decorateMap.SetTile(t, i.Type.MainDecorate);
                             Coords tmp = DungeonMap.GetCenterOfChunk(i, biome.Ground, botMap, biome);
                             Coords tmp2 = PaintChest(biome, i, decorateMap, botMap);
+                          
 
-                            if (tmp2 != null)
+                            if (tmp2 != null && i.IsUesed)
                             {
              
                                 PaintConnect(biome, tmp2, tmp, biome.Ground);
@@ -792,19 +782,29 @@ public class DungeonGenerator : MonoBehaviour
                         }
                     }
                 }
-                int trashmax = 2;
+                int trashmax = i.Type.MaxTrash;
                 while (trashmax >= 0)
                 {
+
                     Coords trash = DungeonMap.GetRandomCoordsPlace(i, biome);
                     Vector3Int normal = new Vector3Int(trash.x, trash.y, 0);
                     if (trash.IsNearTextureWith(botMap, biome.Ground) > 2 && biome.Ground == botMap.GetTile(normal) && decorateMap.GetTile(normal) == null)
                     {
                         float random = Random.Range(0.0f, 1.0f);
                         if (random >= i.Type.trashSpawnChance)
+                        {
+                            GameObject destroy = Instantiate(Destroyable, normal, Quaternion.identity);
+                            destroy.GetComponent<Destroyinfo>().SetMap(decorateMap);
                             decorateMap.SetTile(normal, i.Type.Trash);
+                        }
                         trashmax--;
 
                     }
+                    
+
+                        trashmax--;
+
+                    
                 }
 
 
@@ -826,7 +826,7 @@ public class DungeonGenerator : MonoBehaviour
 
                             Coords tmp = DungeonMap.GetCenterOfChunk(i, biome.Ground, botMap, biome);
                             Coords tmp2 =PaintChest(biome, i, decorateMap, botMap);
-                            if (tmp2 != null)
+                            if (tmp2 != null && i.IsUesed)
                             {
                                 
                                 PaintConnect(biome, tmp2, tmp, biome.Ground);
@@ -835,7 +835,7 @@ public class DungeonGenerator : MonoBehaviour
 
                     }
                 }
-                int trashmax = 2;
+                int trashmax = i.Type.MaxTrash;
 
                 while (trashmax > 0)
                 {
@@ -845,10 +845,18 @@ public class DungeonGenerator : MonoBehaviour
                     {
                         float random = Random.Range(0.0f, 1.0f);
                         if (random >= i.Type.trashSpawnChance)
+                        {
+                            GameObject destroy = Instantiate(Destroyable, normal, Quaternion.identity);
+                            destroy.GetComponent<Destroyinfo>().SetMap(decorateMap);
                             decorateMap.SetTile(normal, i.Type.Trash);
+                        }
                         trashmax--;
 
                     }
+                 
+
+                        trashmax--;
+
 
                 }
             }
@@ -857,19 +865,22 @@ public class DungeonGenerator : MonoBehaviour
                 Coords tmp = DungeonMap.GetCenterOfChunk(i, biome.Ground,biome.Road, botMap, biome);
                 Vector3Int normal = new Vector3Int(tmp.x, tmp.y, 0);
                 decorateMap.SetTile(normal, i.Type.MainDecorate);
-                
+                if(i.Type.TypeGenerate == Room.Generate.End)
+                {
+                    Instantiate(NextLevel, normal, Quaternion.identity);
+                }
                 if (i.IsUesed)
                 {
                     
                     Coords tmp2 = PaintChest(biome, i, decorateMap, botMap);
      
-                    if (tmp2 != null)
+                    if (tmp2 != null && i.IsUesed)
                     {
      
                         PaintConnect(biome, tmp2, tmp, biome.Ground);
                     }
                 }
-                int trashmax = 2;
+                int trashmax = i.Type.MaxTrash;
 
                 while (trashmax > 0)
                 {
@@ -879,16 +890,19 @@ public class DungeonGenerator : MonoBehaviour
                     {
                         float random = Random.Range(0.0f, 1.0f);
                         if (random >= i.Type.trashSpawnChance)
+                        {
+                            GameObject destroy = Instantiate(Destroyable, normal, Quaternion.identity);
+                            destroy.GetComponent<Destroyinfo>().SetMap(decorateMap);
                             decorateMap.SetTile(normal, i.Type.Trash);
+                        }
                         trashmax--;
 
                     }
-                    else if (!i.IsUesed)
-                    {
-      
+              
+
                         trashmax--;
 
-                    }
+                    
 
                 }
 
@@ -907,15 +921,23 @@ public class DungeonGenerator : MonoBehaviour
 
         if (!i.ChestSpawned)
         {
-            Tile chest = i.Type.SpawnChest();
 
             if (biome.Ground == botMap.GetTile(newcoords))
             {
-
+                Tile chest = i.Type.SpawnChest(i.ID);
                 decorateMap.SetTile(newcoords, chest);
+             
                 i.ChestSpawned = true;
                 if (chest != null)
+                {
+
+                    GameObject coll =  Instantiate(ChestCollider, new Vector3(tmp.x, tmp.y, 0), Quaternion.identity);
+                    coll.GetComponentInChildren<OpenChest>().RoomInfo = i.Type;
+                    coll.GetComponentInChildren<OpenChest>().idchunk = i.ID;
+
                     return tmp;
+
+                }
                 else
                     return null;
             }
@@ -938,13 +960,17 @@ public class DungeonGenerator : MonoBehaviour
         {
             foreach(var j in i.ListCoords)
             {
+                
                 Vector3Int PaintPixel = new Vector3Int(j.x, j.y, 0);
+                
+                Vector3 position = new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, -10);
+                Instantiate(MapCollider, position, Quaternion.identity);
                 if (botMap.GetTile(PaintPixel) == null)
                 {
                     //Collider2D tmpcol = Instantiate(collider, new Vector3(PaintPixel.x + 0.5f, PaintPixel.y + 0.5f, PaintPixel.z), Quaternion.identity);
-//                    tmpcol.transform.parent = ParentCol.transform;
+                    //                    tmpcol.transform.parent = ParentCol.transform;
 
-
+                   
                     botMap.SetTile(PaintPixel, biomes.Wall);
      
                 }
@@ -1056,8 +1082,7 @@ public class DungeonGenerator : MonoBehaviour
 
     }
     public void PaintConnect(Biomes biome,Coords first, Coords seconds, RuleTile ground)
-    {
-       
+    { 
         if (seconds.x < first.x )
         {
 

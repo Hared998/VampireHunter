@@ -200,8 +200,10 @@ public class Map
     {
         if (chunk.random == null)
         {
+
             int random = Random.Range(0, ChunkSize.x * ChunkSize.y);
             Coords tmp = chunk.ListCoords[random];
+           
             if ((tmp.x % ChunkSize.x > biome.roadSize + biome.Skip && tmp.y % ChunkSize.y > biome.roadSize + biome.Skip) && (tmp.x % ChunkSize.x < (ChunkSize.x - biome.roadSize - biome.Skip) && tmp.y % ChunkSize.y < (ChunkSize.y - biome.roadSize - biome.Skip)))
             {
                 foreach (var i in chunk.ListBorder)
@@ -216,7 +218,9 @@ public class Map
             }
             else
             {
+
                 tmp = GetRandomCoords(chunk, biome);
+             
                 return tmp;
             }
         }
@@ -254,15 +258,19 @@ public class Map
         {
             Coords tmpcoords = new Coords();
             int x = chunk.ListCoords[chunk.ListCoords.Count / 2].x;
-            int y = chunk.ListCoords[chunk.ListCoords.Count / 2].y + (ChunkSize.y / 2);
-            
+            int y = chunk.ListCoords[0].y +  (ChunkSize.y / 2);
+           
+
             if (chunk.random == null)
             {
+              
                 tmpcoords = new Coords(x, y);
                 if (!map.GetTile(new Vector3Int(x, y, 0)) == tile)
                 {
+                   
                     tmpcoords = FindRoom(tmpcoords, tile, map);
                 }
+               
                 chunk.random = tmpcoords;
                 return tmpcoords;
             }
@@ -333,7 +341,7 @@ public class Map
         List<Vector3Int> Visited = new List<Vector3Int>();
         List<Vector3Int> Tovisit = new List<Vector3Int>();
         Tovisit.AddRange(cords.GetNeighbour());
-
+   
         while (Tovisit.Count > 0)
         {
             if (!Visited.Contains(Tovisit[0]))

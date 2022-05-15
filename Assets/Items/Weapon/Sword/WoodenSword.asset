@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1284fe41e200ae341a5b0ad6736bfaa9, type: 3}
+  m_Name: WoodenSword
+  m_EditorClassIdentifier: 
+  idItem: 4000
+  itemName: Wooden Sword
+  typeItem: 4
+  descriptionItem: 
+  isEnemyGet: 0
+  isActive: 0
+  efectList:
+  - {fileID: 11400000, guid: 1874393a84320ff4aacbdf9abc6c5328, type: 2}
+  - {fileID: 11400000, guid: 52efeea5991736046a03895fe9c426c3, type: 2}
+  animation: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: 636b881d414f4174ea083d6ffeb02a6d, type: 3}
+  WearableIcon: {fileID: 21300000, guid: ddbbd54ad8fb10f43a8675ee1037c770, type: 3}
+  AnimationIcon: {fileID: 21300000, guid: c7046fedf7d690e4889eb0343c4fbfc9, type: 3}

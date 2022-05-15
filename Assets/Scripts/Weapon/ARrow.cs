@@ -7,6 +7,7 @@ public class ARrow : MonoBehaviour
 {
     public Rigidbody2D Arrow;
     public float damage;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -26,19 +27,26 @@ public class ARrow : MonoBehaviour
         Destroy(gameObject);
 
     }
-
-    void OnCollisionEnter2D(Collision2D col)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-
-        if (col.gameObject.CompareTag("Enemy"))
+        Arrow.velocity = transform.up * 0;
+        StartCoroutine(Cleaner());
+    }
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if(col.gameObject.CompareTag("ItemDestroy"))
+        {
+            Destroy(col.gameObject);
+            col.gameObject.GetComponent<Destroyinfo>().DestroyObject();
+            Destroy(gameObject);
+        }
+        else if (col.gameObject.CompareTag("Enemy"))
         {
 
-            Vector2 direction = col.contacts[0].point - (Vector2)Arrow.transform.position;
-            direction.y = 0;
-            col.gameObject.GetComponent<EnemyController>().TakeDamage(damage);
+            col.gameObject.GetComponentInParent<EnemyController>().TakeDamage(damage);
+            col.gameObject.GetComponentInParent<EnemyController>().EF.GetHit = true;
             Destroy(gameObject);
-            col.gameObject.GetComponent<EnemyController>().EF.GetHit = true;
-            col.gameObject.GetComponent<Rigidbody2D>().AddForce(direction.normalized * 50f);
+            
 
             Arrow.GetComponent<BoxCollider2D>().enabled = false;
         }
@@ -48,6 +56,7 @@ public class ARrow : MonoBehaviour
             StartCoroutine(Cleaner());
 
         }
+
     }
 }
  

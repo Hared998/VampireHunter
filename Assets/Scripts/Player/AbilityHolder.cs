@@ -9,7 +9,7 @@ public class AbilityHolder : MonoBehaviour
     public float cooldownTime;
     public float activeTime;
 
-    enum State
+    public enum State
     {
         ready,
         active,
@@ -21,6 +21,10 @@ public class AbilityHolder : MonoBehaviour
 
     public KeyCode Key;
     // Update is called once per frame
+    public State GetState()
+    {
+        return state;
+    }
     void Update()
     {
         switch (state)

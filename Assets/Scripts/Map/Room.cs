@@ -6,9 +6,13 @@ using UnityEngine.Tilemaps;
 [System.Serializable]
 public class Chest
 {
+    public string namechest;
     public float spawnRateMin;
+    public int idChunk;
     public float spawnRateMax;
+    public Drop chestItems;
     public Tile Texture;
+    public bool open;
 }
 public class Room : MonoBehaviour
 {
@@ -38,17 +42,33 @@ public class Room : MonoBehaviour
     public Tile Trash;
     public int MaxTrash;
     public float trashSpawnChance;
+    List<Chest> spawnedChest = new List<Chest>();
 
-    public Tile SpawnChest()
+
+
+    public Chest GetChest(int idchunk)
+    {
+        foreach(var i in spawnedChest)
+        {
+            if (i.idChunk == idchunk)
+            {
+                return i;
+            }
+        }
+        return null;
+    }
+    public Tile SpawnChest(int idchunk)
     {
         Tile tmp = null;
         float ratio = Random.Range(0.0f, 1.0f);
         foreach (var i in this.Chest)
         {
-         
             if (i.spawnRateMax > ratio && i.spawnRateMin <= ratio)
             {
                 tmp = i.Texture;
+                Chest tmpchest = i;
+                tmpchest.idChunk = idchunk;
+                spawnedChest.Add(tmpchest);
                 return tmp;
             }
         }
@@ -56,9 +76,9 @@ public class Room : MonoBehaviour
 
     }
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+ 
     }
 
     // Update is called once per frame
